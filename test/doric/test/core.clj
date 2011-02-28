@@ -1,5 +1,5 @@
 (ns doric.test.core
-  (:refer-clojure :exclude [format name])
+  (:refer-clojure :exclude [format name when])
   (:use [doric.core] :reload)
   (:use [clojure.test]))
 
@@ -47,3 +47,11 @@
   (is (= ".   " (align-cell {:width 4} "." :left)))
   (is (= "  . " (align-cell {:width 4} "." :center)))
   (is (= "   ." (align-cell {:width 4} "." :right))))
+
+(deftest test-when
+  (is (re-find #"Foo" (table [{:name :foo}] [{:foo :bar}])))
+  (is (re-find #"bar" (table [{:name :foo}] [{:foo :bar}])))
+  (is (re-find #"Foo" (table [{:name :foo :when true}] [{:foo :bar}])))
+  (is (re-find #"bar" (table [{:name :foo :when true}] [{:foo :bar}])))
+  (is (not (re-find #"Foo" (table [{:name :foo :when false}] [{:foo :bar}]))))
+  (is (not (re-find #"bar" (table [{:name :foo :when false}] [{:foo :bar}])))))

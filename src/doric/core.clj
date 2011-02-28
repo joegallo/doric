@@ -1,5 +1,5 @@
 (ns doric.core
-  (:refer-clojure :exclude [format name join split])
+  (:refer-clojure :exclude [format name join split when])
   (:use [clojure.string :only [join split]])
   (:require [clojure.contrib.string :as s]))
 
@@ -31,6 +31,9 @@
                (:align col)
                :center)))
 
+(defn when [col & [data]]
+  (:when col true))
+
 (defn width [col & [data]]
   (or (:width col)
       (apply max (map count (cons (:title col)
@@ -60,12 +63,12 @@
   (align-cell col ((:name col) row) (:align col)))
 
 (defn header [cols]
-  (for [col cols]
+  (for [col cols :when (:when col)]
     (th col)))
 
 (defn body [cols rows]
   (for [row rows]
-    (for [col cols]
+    (for [col cols :when (:when col)]
       (td col row))))
 
 (defn- col-data [col rows]
@@ -75,7 +78,8 @@
   {:align (align col data)
    :format (format col data)
    :title (title col data)
-   :title-align (title-align col data)})
+   :title-align (title-align col data)
+   :when (when col data)})
 
 (defn- columns1 [cols rows]
   (for [col cols]
@@ -106,3 +110,4 @@
         rows (format-rows cols rows)
         cols (columns2 cols rows)]
     (render (cons (header cols) (body cols rows)))))
+
