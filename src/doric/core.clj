@@ -81,8 +81,13 @@
    :title-align (title-align col data)
    :when (when col data)})
 
+(defn- column-map [col]
+  (if (map? col)
+    col
+    {:name col}))
+
 (defn- columns1 [cols rows]
-  (for [col cols]
+  (for [col cols :let [col (column-map col)]]
     (merge col
            (column1 col (col-data col rows)))))
 
