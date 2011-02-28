@@ -60,7 +60,7 @@
   (align-cell col (:title col) (:title-align col)))
 
 (defn td [col row]
-  (align-cell col ((:name col) row) (:align col)))
+  (align-cell col (row (:name col)) (:align col)))
 
 (defn header [cols]
   (for [col cols :when (:when col)]
@@ -72,7 +72,7 @@
       (td col row))))
 
 (defn- col-data [col rows]
-  (map (:name col) rows))
+  (map #(get % (:name col)) rows))
 
 (defn- column1 [col & [data]]
   {:align (align col data)
@@ -89,8 +89,8 @@
 (defn- format-rows [cols rows]
   (for [row rows]
     (into {}
-          (for [col cols :let [name (:name col)] ]
-            [name (format-cell col (name row))]))))
+          (for [col cols :let [name (:name col)]]
+            [name (format-cell col (row name))]))))
 
 (defn- column2 [col & [data]]
   {:width (width col data)})
