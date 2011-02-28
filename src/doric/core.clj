@@ -101,9 +101,19 @@
            (column2 col (col-data col rows)))))
 
 (defn render [table]
-  (apply str
-         (for [tr table]
-           (str "| " (join " | " tr) " |\n"))))
+  (let [spacer (str "|-"
+                    (join "-+-"
+                          (map #(apply str (repeat (.length %) "-"))
+                               (first table)))
+                    "-|\n")]
+    (apply str
+           spacer
+           (str "| " (join " | " (first table)) " |\n")
+           spacer
+           (concat
+            (for [tr (rest table)]
+              (str "| " (join " | " tr) " |\n"))
+            [spacer]))))
 
 (defn table [cols rows]
   (let [cols (columns1 cols rows)
