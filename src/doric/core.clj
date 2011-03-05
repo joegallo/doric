@@ -120,9 +120,14 @@
               (str "| " (join " | " tr) " |\n"))
             [spacer]))))
 
-(defn table [cols rows]
-  (let [cols (columns1 cols rows)
-        rows (format-rows cols rows)
-        cols (columns2 cols rows)]
-    (render (cons (header cols) (body cols rows)))))
+(defn table
+  ([rows]
+     (table (keys (first rows)) rows))
+  ([cols rows]
+     (let [cols (columns1 cols rows)
+           rows (format-rows cols rows)
+           cols (columns2 cols rows)]
+       (render (cons (header cols) (body cols rows))))))
+
+
 
