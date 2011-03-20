@@ -29,6 +29,14 @@
   (is (= :right (title-align {:align :left :title-align :right})))
   (is (= :right (title-align {:align :left :title-align :right}))))
 
+(deftest test-when
+  (is (re-find #"Foo" (table [{:name :foo}] [{:foo :bar}])))
+  (is (re-find #"bar" (table [{:name :foo}] [{:foo :bar}])))
+  (is (re-find #"Foo" (table [{:name :foo :when true}] [{:foo :bar}])))
+  (is (re-find #"bar" (table [{:name :foo :when true}] [{:foo :bar}])))
+  (is (not (re-find #"Foo" (table [{:name :foo :when false}] [{:foo :bar}]))))
+  (is (not (re-find #"bar" (table [{:name :foo :when false}] [{:foo :bar}])))))
+
 (deftest test-width
   (is (= 5 (width {:width 5})))
   (is (= 5 (width {:width 5 :name :foobar})))
@@ -48,10 +56,29 @@
   (is (= "  . " (align-cell {:width 4} "." :center)))
   (is (= "   ." (align-cell {:width 4} "." :right))))
 
-(deftest test-when
-  (is (re-find #"Foo" (table [{:name :foo}] [{:foo :bar}])))
-  (is (re-find #"bar" (table [{:name :foo}] [{:foo :bar}])))
-  (is (re-find #"Foo" (table [{:name :foo :when true}] [{:foo :bar}])))
-  (is (re-find #"bar" (table [{:name :foo :when true}] [{:foo :bar}])))
-  (is (not (re-find #"Foo" (table [{:name :foo :when false}] [{:foo :bar}]))))
-  (is (not (re-find #"bar" (table [{:name :foo :when false}] [{:foo :bar}])))))
+(deftest test-th
+  (is (= "Title  " (th {:title "Title" :width 7 :title-align :left})))
+  (is (= " Title " (th {:title "Title" :width 7 :title-align :center})))
+  (is (= "  Title" (th {:title "Title" :width 7 :title-align :right}))))
+
+(deftest test-td
+  (is (= ".  " (td {:name :t :width 3 :align :left} {:t "."})))
+  (is (= " . " (td {:name :t :width 3 :align :center} {:t "."})))
+  (is (= "  ." (td {:name :t :width 3 :align :right} {:t "."}))))
+
+;; TODO (deftest test-header)
+
+;; TODO (deftest test-body)
+
+(deftest test-render
+  (let [rendered (render [["1" "2"]["3" "4"]])]
+    (is (.contains rendered "| 1 | 2 |"))
+    (is (.contains rendered "| 3 | 4 |"))
+    (is (.contains rendered "|---+---|"))))
+
+;; TODO embiggen these tests
+(deftest test-table
+  (let [rendered (table [{:1 3 :2 4}])]
+    (is (.contains rendered "| 1 | 2 |"))
+    (is (.contains rendered "| 3 | 4 |"))
+    (is (.contains rendered "|---+---|"))))
