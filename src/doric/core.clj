@@ -128,6 +128,3 @@
            rows (format-rows cols rows)
            cols (columns2 cols rows)]
        (render (cons (header cols) (body cols rows))))))
-
-
-
