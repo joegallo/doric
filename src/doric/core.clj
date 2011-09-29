@@ -1,7 +1,6 @@
 (ns doric.core
   (:refer-clojure :exclude [format name join split when])
-  (:use [clojure.string :only [join split]])
-  (:require [clojure.contrib.string :as s]))
+  (:use [clojure.string :only [join split]]))
 
 (defn- title-case-word [w]
   (if (zero? (count w))
@@ -44,7 +43,7 @@
 
 (defn align-cell [col s align]
   (let [width (:width col)
-        s (s/take width s)
+        s (subs s 0 (min (count s) width))
         len (count s)
         pad #(apply str (take % (repeat " ")))
         padding (- width len)
