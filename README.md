@@ -113,6 +113,16 @@ use it would probably look more like this, which isn't nearly as bad:
     |  JavaScript  |              | weak         |
     |--------------+--------------+--------------|
 
+Each column can also take a format function to alter the way
+individual rows are displayed.  For example, there's an included bar
+function for creating text bar charts:
+
+    > (print (table ^{:format raw} [:a :b {:name :c :format bar}]
+                                   [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+    A B    C  
+    1 2 ###   
+    4 5 ######
+
 Column level options include:
 
 * :align - :left, :right, :center, defaults to :left
