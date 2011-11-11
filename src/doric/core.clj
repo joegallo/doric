@@ -102,6 +102,11 @@
     (merge col
            (column2 col (col-data col rows)))))
 
+;; data formats
+(defn bar [x]
+  (apply str (repeat x "#")))
+
+;; table formats
 (def csv 'doric.csv)
 (def html 'doric.html)
 (def org 'doric.org)
