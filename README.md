@@ -6,7 +6,7 @@ comes out as a string suitable for printing.
 
 Add this to your project.clj :dependencies list:
 
-    [doric "0.5.0"]
+    [doric "0.6.0"]
 
 ## Usage
 
@@ -22,7 +22,7 @@ driven from the keys, by default, :like-this becomes Like This.
     | 1 | 2 |
     |---+---|
 
-The formatting is emacs org-mode tables, which are awesome.
+The default formatting is emacs org-mode tables, which are awesome.
 
     > (print (table [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
     |---+---+---|
@@ -31,6 +31,27 @@ The formatting is emacs org-mode tables, which are awesome.
     | 1 | 2 | 3 |
     | 4 | 5 | 6 |
     |---+---+---|
+
+But you can also have raw, csv, and html tables pretty easily:
+
+    > (print (table ^{:format raw} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+    A B C
+    1 2 3
+    4 5 6
+
+    > (print (table ^{:format csv} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+    A,B,C
+    1,2,3
+    4,5,6
+
+    > (print (table ^{:format html} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+    ;; omg lots of <tr>s and <td>s here
+
+You can also use a custom table format by specifying a namespace that
+contains the functions th, td, and render.
+
+    > (print (table ^{:format 'my.sweet.ns} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+    ;; the sky's the limit, brah
 
 Individual columns are optional, each column automatically sizes
 itself to hold the data.
@@ -77,14 +98,30 @@ the way the data is displayed.
     |  JavaScript  |              | weak         |
     |--------------+--------------+--------------|
 
+Which probably seems like a lot of syntax, but consider that in actual
+use it would probably look more like this, which isn't nearly as bad:
+
+    > (print (table [{:name :lang :title "Language" :align :center :width 12}
+                     {:name :safety :width 12 :align :left}
+                     {:name :strength :width 12 :align :left}]
+                     (select-languages-from-db)))
+    |--------------+--------------+--------------|
+    |   Language   | Safety       | Strength     |
+    |--------------+--------------+--------------|
+    |    Clojure   | safe         | strong       |
+    |     Java     | safe         | strong       |
+    |  JavaScript  |              | weak         |
+    |--------------+--------------+--------------|
+
 Column level options include:
 
 * :align - :left, :right, :center, defaults to :left
 * :title - a string, defaults to your column name, title-cased
 * :title-align - like align, and defaults to the same as :align
+* :format - a function to call on the values in the column, pre-output
 * :when - a boolean, allows you to turn columns on and off
 * :width - how wide to make the column, defaults to wide enough
-* :format - a function to call on the values in the column, pre-output
+* :ellipsis - a boolean, whether or not to ... truncated values, defaults to false
 
 ## License
 
