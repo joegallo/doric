@@ -49,11 +49,11 @@
         padding (- width len)
         half-padding (/ (- width len) 2)]
     (case align
-          :left (str s (pad padding))
-          :right (str (pad padding) s)
-          :center (str (pad (Math/ceil half-padding))
-                       s
-                       (pad (Math/floor half-padding))))))
+      :left (str s (pad padding))
+      :right (str (pad padding) s)
+      :center (str (pad (Math/ceil half-padding))
+                   s
+                   (pad (Math/floor half-padding))))))
 
 (defn th [col]
   (align-cell col (:title col) (:title-align col)))
