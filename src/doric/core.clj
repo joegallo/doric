@@ -55,11 +55,9 @@
                    s
                    (pad (Math/floor half-padding))))))
 
-(defn th [col]
-  (align-cell col (:title col) (:title-align col)))
-
-(defn td [col row]
-  (align-cell col (row (:name col)) (:align col)))
+(def th)
+(def td)
+(def render)
 
 (defn header [cols]
   (for [col cols :when (:when col)]
@@ -104,26 +102,23 @@
     (merge col
            (column2 col (col-data col rows)))))
 
-(defn render [table]
-  (let [spacer (str "|-"
-                    (join "-+-"
-                          (map #(apply str (repeat (.length %) "-"))
-                               (first table)))
-                    "-|\n")]
-    (apply str
-           spacer
-           (str "| " (join " | " (first table)) " |\n")
-           spacer
-           (concat
-            (for [tr (rest table)]
-              (str "| " (join " | " tr) " |\n"))
-            [spacer]))))
+(def csv 'doric.csv)
+(def html 'doric.html)
+(def org 'doric.org)
+(def raw 'doric.raw)
 
 (defn table
   ([rows]
-     (table (keys (first rows)) rows))
+     (table (vary-meta (keys (first rows))
+                       merge (meta rows)) rows))
   ([cols rows]
-     (let [cols (columns1 cols rows)
+     (let [meta (meta cols)
+           cols (columns1 cols rows)
            rows (format-rows cols rows)
-           cols (columns2 cols rows)]
-       (render (cons (header cols) (body cols rows))))))
+           cols (columns2 cols rows)
+           format (or (:format meta) org)]
+       (require format)
+       (binding [th (ns-resolve format 'th)
+                 td (ns-resolve format 'td)
+                 render  (ns-resolve format 'render)]
+         (render (cons (header cols) (body cols rows)))))))
