@@ -3,6 +3,14 @@
   (:use [doric.core] :reload)
   (:use [clojure.test]))
 
+(use-fixtures :once
+              (fn [f]
+                (require org)
+                (binding [th (ns-resolve org 'th)
+                          td (ns-resolve org 'td)
+                          render  (ns-resolve org 'render)]
+                  (f))))
+
 (deftest test-title-case
   (is (= "Foo" (title-case "foo")))
   (is (= "Foo-bar" (title-case "foo-bar")))

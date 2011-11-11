@@ -55,9 +55,9 @@
                    s
                    (pad (Math/floor half-padding))))))
 
-(def th)
-(def td)
-(def render)
+(def ^{:dynamic true} th)
+(def ^{:dynamic true} td)
+(def ^{:dynamic true} render)
 
 (defn header [cols]
   (for [col cols :when (:when col)]
