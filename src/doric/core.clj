@@ -43,7 +43,9 @@
 
 (defn align-cell [col s align]
   (let [width (:width col)
-        s (subs s 0 (min (count s) width))
+        s (cond (<= (count s) width) s
+                (:ellipsis col) (str (subs s 0 (- width 3)) "...")
+                :else (subs s 0 width))
         len (count s)
         pad #(apply str (take % (repeat " ")))
         padding (- width len)
