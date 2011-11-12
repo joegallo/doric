@@ -8,7 +8,7 @@
 (def td unaligned-td)
 
 (defn escape [s]
-  (let [s (.replaceAll s "\"" "\"\"")]
+  (let [s (.replaceAll (str s) "\"" "\"\"")]
     (if (re-find #"[,\n\"]" s)
       (str "\"" s "\"")
       s)))

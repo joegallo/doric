@@ -39,10 +39,11 @@
                                   (map str data))))))
 
 (defn format-cell [col s]
-  (str ((:format col) s)))
+  ((:format col) s))
 
 (defn align-cell [col s align]
   (let [width (:width col)
+        s (str s)
         s (cond (<= (count s) width) s
                 (:ellipsis col) (str (subs s 0 (- width 3)) "...")
                 :else (subs s 0 width))

@@ -44,7 +44,7 @@
   (is (= 7 (width {:name :foobar} ["foobar2"]))))
 
 (deftest test-format-cell
-  (is (= "2" (format-cell {:format inc} 1))))
+  (is (= 2 (format-cell {:format inc} 1))))
 
 (deftest test-align-cell
   (is (= "." (align-cell {:width 1} "." :left)))
