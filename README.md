@@ -10,7 +10,11 @@ Add this to your project.clj :dependencies list:
 
 ## Usage
 
+    ;; like this for org-mode tables only
     (use '[doric.core :only [table]])
+
+    ;; or this, if you want the alternative formats
+    (use '[doric.core :only [table csv html org raw]])
 
 Rows are maps, columns are entries in the maps.  Column titles are
 driven from the keys, by default, :like-this becomes Like This.
