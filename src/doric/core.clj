@@ -57,15 +57,11 @@
                    s
                    (pad (Math/floor half-padding))))))
 
-(def ^{:dynamic true} th)
-(def ^{:dynamic true} td)
-(def ^{:dynamic true} render)
-
-(defn header [cols]
+(defn header [th cols]
   (for [col cols :when (:when col)]
     (th col)))
 
-(defn body [cols rows]
+(defn body [td cols rows]
   (for [row rows]
     (for [col cols :when (:when col)]
       (td col row))))
@@ -114,18 +110,41 @@
 (def org 'doric.org)
 (def raw 'doric.raw)
 
-(defn table
+;; table format helpers
+;; aligned th and td are useful for whitespace sensitive formats, like
+;; raw and org
+(defn aligned-th [col]
+  (align-cell col (:title col) (:title-align col)))
+
+(defn aligned-td [col row]
+  (align-cell col (row (:name col)) (:align col)))
+
+;; unalighed-th and td are useful for whitespace immune formats, like
+;; csv and html
+(defn unaligned-th [col]
+  (:title col))
+
+(defn unaligned-td [col row]
+  (row (:name col)))
+
+(defn table*
   ([rows]
-     (table (vary-meta (keys (first rows))
-                       merge (meta rows)) rows))
+     (table* (vary-meta (keys (first rows))
+                        merge (meta rows)) rows))
   ([cols rows]
      (let [meta (meta cols)
+           format (or (:format meta) org)
+           _ (require format)
+           th (ns-resolve format 'th)
+           td (ns-resolve format 'td)
+           render  (ns-resolve format 'render)
            cols (columns1 cols rows)
            rows (format-rows cols rows)
-           cols (columns2 cols rows)
-           format (or (:format meta) org)]
-       (require format)
-       (binding [th (ns-resolve format 'th)
-                 td (ns-resolve format 'td)
-                 render  (ns-resolve format 'render)]
-         (render (cons (header cols) (body cols rows)))))))
+           cols (columns2 cols rows)]
+       (render (cons (header th cols) (body td cols rows))))))
+
+(defn table
+  {:arglists '[[rows]
+               [cols rows]]}
+  [& args]
+  (apply str (join "\n" (apply table* args))))

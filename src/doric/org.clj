@@ -1,25 +1,21 @@
 (ns doric.org
   (:refer-clojure :exclude [join])
   (:use [clojure.string :only [join]]
-        [doric.core :only [align-cell]]))
+        [doric.core :only [aligned-th aligned-td]]))
 
-(defn th [col]
-  (align-cell col (:title col) (:title-align col)))
+(def th aligned-th)
 
-(defn td [col row]
-  (align-cell col (row (:name col)) (:align col)))
+(def td aligned-td)
 
 (defn render [table]
   (let [spacer (str "|-"
                     (join "-+-"
                           (map #(apply str (repeat (.length %) "-"))
                                (first table)))
-                    "-|\n")]
-    (apply str
-           spacer
-           (str "| " (join " | " (first table)) " |\n")
-           spacer
-           (concat
+                    "-|")]
+    (concat [spacer
+             (str "| " (join " | " (first table)) " |")
+             spacer]
             (for [tr (rest table)]
-              (str "| " (join " | " tr) " |\n"))
-            [spacer]))))
+              (str "| " (join " | " tr) " |"))
+            [spacer])))

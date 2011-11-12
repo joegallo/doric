@@ -1,15 +1,8 @@
 (ns doric.test.core
   (:refer-clojure :exclude [format name when])
-  (:use [doric.core] :reload)
-  (:use [clojure.test]))
-
-(use-fixtures :once
-              (fn [f]
-                (require org)
-                (binding [th (ns-resolve org 'th)
-                          td (ns-resolve org 'td)
-                          render  (ns-resolve org 'render)]
-                  (f))))
+  (:use [doric.core]
+        [clojure.test]
+        [doric.org :only [th td render]]))
 
 (deftest test-title-case
   (is (= "Foo" (title-case "foo")))

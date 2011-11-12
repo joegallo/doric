@@ -1,17 +1,17 @@
 (ns doric.html
   (:refer-clojure :exclude [join])
   (:use [clojure.string :only [join]]
-        [doric.core :only [align-cell]]))
+        [doric.core :only [unaligned-th unaligned-td]]))
 
-(defn th [col]
-  (str "<th>" (:title col) "</th>"))
+(def th unaligned-th)
 
-(defn td [col row]
-  (str "<td>" (row (:name col)) "</td>"))
+(def td unaligned-td)
 
 (defn render [table]
-  (str "<table>"
-       (str "<tr>" (join (first table)) "</tr>")
-       (join (for [tr (rest table)]
-               (str "<tr>" (join tr) "</tr>")))
-       "</table>"))
+  (concat ["<table>"
+           (str "<tr>" (join (for [c (first table)]
+                               (str "<th>" c "</th>"))) "</tr>")]
+          (for [tr (rest table)]
+            (str "<tr>" (join (for [c tr]
+                                (str "<td>" c "</td>"))) "</tr>"))
+          ["</table>"]))
