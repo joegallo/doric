@@ -6,7 +6,7 @@ comes out as a string suitable for printing.
 
 Add this to your project.clj :dependencies list:
 
-    [doric "0.6.0"]
+    [doric "0.7.0"]
 
 ## Usage
 
