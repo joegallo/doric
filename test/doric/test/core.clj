@@ -105,3 +105,12 @@
                          {:name :2 :format inc :width 0}]
                         [{:1 3 :2 4}])]
         (is (= 0 @calls))))))
+
+(deftest test-empty-table
+  (let [empty-table "|--|\n|  |\n|--|\n|--|"]
+    (is (= empty-table (table [])))
+    (is (= empty-table (table nil)))
+    (is (= empty-table (table [] [])))
+    (is (= empty-table (table [] nil)))
+    (is (= empty-table (table nil [])))
+    (is (= empty-table (table nil nil)))))

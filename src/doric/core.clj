@@ -130,7 +130,7 @@
 
 (defn table*
   ([rows]
-     (table* (vary-meta (keys (first rows))
+     (table* (vary-meta (or (keys (first rows)) [])
                         merge (meta rows)) rows))
   ([cols rows]
      (let [meta (meta cols)
