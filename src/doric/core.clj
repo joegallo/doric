@@ -1,6 +1,7 @@
 (ns doric.core
   (:refer-clojure :exclude [format name join split when])
-  (:use [clojure.string :only [join split]]))
+  (:use [clojure.string :only [join split]])
+  (:import (java.io BufferedReader StringReader)))
 
 (defn- title-case-word [w]
   (if (zero? (count w))
@@ -139,6 +140,27 @@
                               (into {}
                                     (map-indexed (fn [i x] [i x]) row)))
           (map? example) rows)))
+
+(defn wrap*
+  "recursively wrap strings that don't contain any line breaks"
+  ([s w]
+     (wrap* [] s w))
+  ([a s w]
+     (if (> (count s) w)
+       (let [i (.lastIndexOf s " " w)]
+         (recur (conj a (subs s 0 i))
+                (.trim (subs s (inc i)))
+                w))
+       (conj a s))))
+
+(defn wrap
+  "word wraps a string to some width, returns a vector of lines"
+  [s w]
+  (if s
+    (-> (line-seq (BufferedReader. (StringReader. s)))
+        (mapcat #(wrap* % w))
+        (apply vector))
+    []))
 
 (defn table*
   ([rows]
