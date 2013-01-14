@@ -1,4 +1,4 @@
-(defproject doric "0.8.0-SNAPSHOT"
+(defproject doric "0.8.0"
   :description "Clojure table layout"
   :url "https://github.com/joegallo/doric"
   :license {:name "Eclipse Public License"
