@@ -22,7 +22,10 @@
 (defn title [col & [data]]
   (or (:title col)
       (title-case
-       (.replaceAll (clojure.core/name (:name col))
+       (.replaceAll (clojure.core/name (let [n (:name col)]
+                                         (if (number? n)
+                                           (str n)
+                                           n)))
                     "-" " "))))
 
 (defn title-align [col & [data]]
@@ -128,10 +131,21 @@
 (defn unaligned-td [col row]
   (row (:name col)))
 
+(defn mapify [rows]
+  (let [example (first rows)]
+    (cond (map? rows) (for [k (sort (keys rows))]
+                        {:key k :val (rows k)} )
+          (vector? example) (for [row rows]
+                              (into {}
+                                    (map-indexed (fn [i x] [i x]) row)))
+          (map? example) rows)))
+
 (defn table*
   ([rows]
-     (table* (vary-meta (or (keys (first rows)) [])
-                        merge (meta rows)) rows))
+     (let [meta (meta rows)
+           rows (mapify rows)
+           cols (or (keys (first rows)) [])]
+       (table* (with-meta cols meta) rows)))
   ([cols rows]
      (let [meta (meta cols)
            format (or (:format meta) org)
@@ -139,6 +153,7 @@
            th (ns-resolve format 'th)
            td (ns-resolve format 'td)
            render  (ns-resolve format 'render)
+           rows (mapify rows)
            cols (columns1 cols rows)
            rows (format-rows cols rows)
            cols (columns2 cols rows)]
