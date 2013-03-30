@@ -6,7 +6,7 @@ comes out as a string suitable for printing.
 
 Add this to your project.clj :dependencies list:
 
-    [doric "0.7.0"]
+    [doric "0.8.0"]
 
 ## Usage
 
@@ -139,6 +139,6 @@ Column level options include:
 
 ## License
 
-Copyright (C) 2011 Joe Gallo and Dan Larkin
+Copyright (C) 2013 Joe Gallo and Dan Larkin
 
 Distributed under the Eclipse Public License, the same as Clojure.
