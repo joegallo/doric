@@ -4,7 +4,9 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :min-lein-version "2.0.0"
-  :dependencies [[org.clojure/clojure "1.4.0"]]
   :profiles {:1.2 {:dependencies [[org.clojure/clojure "1.2.1"]]}
              :1.3 {:dependencies [[org.clojure/clojure "1.3.0"]]}
-             :dev {:dependencies [[org.apache.poi/poi "3.7"]]}})
+             :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
+             :dev {:dependencies [[org.clojure/clojure "1.5.1"]
+                                  [org.apache.poi/poi "3.7"]]}}
+  :aliases {"all" ["with-profile" "dev,1.2:dev,1.3:dev,1.4:dev"]})
