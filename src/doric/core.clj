@@ -141,26 +141,33 @@
           (map? example) rows)))
 
 (defn table*
-  ([rows]
-     (let [meta (meta rows)
-           rows (mapify rows)
-           cols (or (keys (first rows)) [])]
-       (table* (with-meta cols meta) rows)))
-  ([cols rows]
-     (let [meta (meta cols)
-           format (or (:format meta) org)
-           _ (require format)
-           th (ns-resolve format 'th)
-           td (ns-resolve format 'td)
-           render (ns-resolve format 'render)
-           rows (mapify rows)
-           cols (columns1 cols rows)
-           rows (format-rows cols rows)
-           cols (columns2 cols rows)]
-       (render (cons (header th cols) (body td cols rows))))))
+  {:arglists '[[rows]
+               [opts rows]
+               [cols rows]
+               [opts cols rows]]}
+  [& args]
+  (let [rows (mapify (last args))
+        [opts cols] (case (count args)
+                      1 [nil nil]
+                      2 (if (map? (first args))
+                          [(first args) nil]
+                          [nil (first args)])
+                      3 [(first args) (second args)])
+        cols (or cols (keys (first rows)))
+        format (or (:format opts) org)
+        _ (require format)
+        th (ns-resolve format 'th)
+        td (ns-resolve format 'td)
+        render (ns-resolve format 'render)
+        cols (columns1 cols rows)
+        rows (format-rows cols rows)
+        cols (columns2 cols rows)]
+    (render (cons (header th cols) (body td cols rows)))))
 
 (defn table
   {:arglists '[[rows]
-               [cols rows]]}
+               [opts rows]
+               [cols rows]
+               [otps cols rows]]}
   [& args]
   (apply str (join "\n" (apply table* args))))
