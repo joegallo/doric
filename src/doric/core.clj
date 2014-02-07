@@ -152,7 +152,7 @@
            _ (require format)
            th (ns-resolve format 'th)
            td (ns-resolve format 'td)
-           render  (ns-resolve format 'render)
+           render (ns-resolve format 'render)
            rows (mapify rows)
            cols (columns1 cols rows)
            rows (format-rows cols rows)
