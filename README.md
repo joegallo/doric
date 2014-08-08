@@ -14,10 +14,10 @@ Add this to your project.clj :dependencies list:
 
 ```clojure
 ;; like this for org-mode tables only
-(use '[doric.core :only [table]])
+(require '[doric.core :refer [table]])
 
 ;; or this, if you want the alternative formats
-(use '[doric.core :only [table csv html org raw]])
+(require '[doric.core :refer [table csv html org raw]])
 ```
 
 Rows are maps, columns are entries in the maps.  Column titles are
