@@ -7,7 +7,7 @@ comes out as a string suitable for printing.
 Add this to your project.clj :dependencies list:
 
 ```clojure
-[doric "0.8.0"]
+[doric "0.9.0"]
 ```
 
 ## Usage
