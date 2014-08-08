@@ -7,6 +7,7 @@
   :profiles {:1.2 {:dependencies [[org.clojure/clojure "1.2.1"]]}
              :1.3 {:dependencies [[org.clojure/clojure "1.3.0"]]}
              :1.4 {:dependencies [[org.clojure/clojure "1.4.0"]]}
-             :dev {:dependencies [[org.clojure/clojure "1.5.1"]
+             :1.5 {:dependencies [[org.clojure/clojure "1.5.1"]]}
+             :dev {:dependencies [[org.clojure/clojure "1.6.0"]
                                   [org.apache.poi/poi "3.7"]]}}
-  :aliases {"all" ["with-profile" "dev,1.2:dev,1.3:dev,1.4:dev"]})
+  :aliases {"all" ["with-profile" "dev,1.2:dev,1.3:dev,1.4:dev,1.5:dev"]})
