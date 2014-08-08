@@ -47,17 +47,17 @@ The default formatting is emacs org-mode tables, which are awesome.
 But you can also have raw, csv, and html tables pretty easily:
 
 ```clojure
-> (print (table ^{:format raw} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+> (print (table {:format raw} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
 A B C
 1 2 3
 4 5 6
 
-> (print (table ^{:format csv} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+> (print (table {:format csv} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
 A,B,C
 1,2,3
 4,5,6
 
-> (print (table ^{:format html} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+> (print (table {:format html} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
 ;; omg lots of <tr>s and <td>s here
 ```
 
@@ -65,7 +65,7 @@ You can also use a custom table format by specifying a namespace that
 contains the functions th, td, and render.
 
 ```clojure
-> (print (table ^{:format 'my.sweet.ns} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+> (print (table {:format 'my.sweet.ns} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
 ;; the sky's the limit, brah
 ```
 
@@ -142,8 +142,8 @@ are displayed.  For example, there's an included bar function for
 creating text bar charts:
 
 ```clojure
-> (print (table ^{:format raw} [:a :b {:name :c :format bar}]
-                               [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+> (print (table {:format raw} [:a :b {:name :c :format bar}]
+                              [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
 A B    C  
 1 2 ###   
 4 5 ######
