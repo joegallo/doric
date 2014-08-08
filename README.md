@@ -139,6 +139,6 @@ Column level options include:
 
 ## License
 
-Copyright (C) 2013 Joe Gallo and Dan Larkin
+Copyright (C) 2014 Joe Gallo and Dan Larkin
 
 Distributed under the Eclipse Public License, the same as Clojure.
