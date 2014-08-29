@@ -1,7 +1,7 @@
 # Doric
 
 Doric is a library for rendering pretty emacs-style tables from
-Clojure data.  Data is passed into Doric as nested collections, and
+Clojure data. Data is passed into Doric as nested collections, and
 comes out as a string suitable for printing.
 
 Add this to your project.clj :dependencies list:
@@ -27,8 +27,11 @@ want to use the other formats.
 nil
 ```
 
-Rows are maps, columns are entries in the maps.  Column titles are
-driven from the keys, by default, :like-this becomes Like This.
+Rows are maps, columns are entries in the maps. Column titles are
+driven from the keys, by default, :like-this becomes Like This. Since
+we can't know the original order of the keys in your maps, you'll
+probably want to provide a columns argument that specifies the order
+of your keys (more on this later).
 
 ```clojure
 > (println (table [:a :b] [{:a 1 :b 2}]))
@@ -98,25 +101,8 @@ itself to hold the data.
 nil
 ```
 
-An optional first vector lets you reorder your columns.
-
-```clojure
-> (println (table [:lang :safety :strength]
-                  [{:lang "Clojure" :strength "strong" :safety "safe"}
-                   {:lang "Java" :strength "strong" :safety "safe"}
-                   {:lang "JavaScript" :strength "weak"}]))
-|------------+--------+----------|
-|    Lang    | Safety | Strength |
-|------------+--------+----------|
-| Clojure    | safe   | strong   |
-| Java       | safe   | strong   |
-| JavaScript |        | weak     |
-|------------+--------+----------|
-nil
-```
-
 Or, you can substitute (per column) a map for a keyword, and change
-the way the data is displayed.
+lots of things about the way the data is displayed.
 
 ```clojure
 > (println (table [{:name :lang :title "Language" :align :center :width 12}
@@ -155,7 +141,7 @@ nil
 ```
 
 Each column can also take a format function to alter the way the cells
-are displayed.  For example, there's an included bar function for
+are displayed. For example, there's an included bar function for
 creating text bar charts:
 
 ```clojure
