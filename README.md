@@ -12,52 +12,63 @@ Add this to your project.clj :dependencies list:
 
 ## Usage
 
-```clojure
-;; like this for org-mode tables only
-(require '[doric.core :refer [table]])
+In most cases, you'll just want to use/require the table function.
 
-;; or this, if you want the alternative formats
-(require '[doric.core :refer [table csv html org raw]])
+```clojure
+> (use '[doric.core :only [table]])
+nil
+```
+
+But you can access other things if you'd like, for instance if you
+want to use the other formats.
+
+```clojure
+> (use '[doric.core :only [table csv html org raw]])
+nil
 ```
 
 Rows are maps, columns are entries in the maps.  Column titles are
 driven from the keys, by default, :like-this becomes Like This.
 
 ```clojure
-> (print (table [{:a 1 :b 2}]))
+> (println (table [:a :b] [{:a 1 :b 2}]))
 |---+---|
 | A | B |
 |---+---|
 | 1 | 2 |
 |---+---|
+nil
 ```
 
 The default formatting is emacs org-mode tables, which are awesome.
 
 ```clojure
-> (print (table [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+> (println (table [:a :b :c] [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
 |---+---+---|
 | A | B | C |
 |---+---+---|
 | 1 | 2 | 3 |
 | 4 | 5 | 6 |
 |---+---+---|
+nil
 ```
 
 But you can also have raw, csv, and html tables pretty easily:
 
 ```clojure
-> (print (table {:format raw} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+> (println (table {:format raw} [:a :b :c] [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
 A B C
 1 2 3
 4 5 6
+nil
 
-> (print (table {:format csv} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+> (println (table {:format csv} [:a :b :c] [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
 A,B,C
 1,2,3
 4,5,6
+nil
 
-> (print (table {:format html} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+> (println (table {:format html} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
 ;; omg lots of <tr>s and <td>s here
 ```
 
@@ -65,17 +76,18 @@ You can also use a custom table format by specifying a namespace that
 contains the functions th, td, and render.
 
 ```clojure
-> (print (table {:format 'my.sweet.ns} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
-;; the sky's the limit, brah
+> (println (table {:format 'my.sweet.ns} [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+;; the sky's the limit, buddy
 ```
 
 Individual columns are optional, each column automatically sizes
 itself to hold the data.
 
 ```clojure
-> (print (table [{:lang "Clojure" :strength "strong" :safety "safe"}
-                 {:lang "Java" :strength "strong" :safety "safe"}
-                 {:lang "JavaScript" :strength "weak"}]))
+> (println (table [:lang :strength :safety]
+                  [{:lang "Clojure" :strength "strong" :safety "safe"}
+                   {:lang "Java" :strength "strong" :safety "safe"}
+                   {:lang "JavaScript" :strength "weak"}]))
 |------------+----------+--------|
 |    Lang    | Strength | Safety |
 |------------+----------+--------|
@@ -83,15 +95,16 @@ itself to hold the data.
 | Java       | strong   | safe   |
 | JavaScript | weak     |        |
 |------------+----------+--------|
+nil
 ```
 
 An optional first vector lets you reorder your columns.
 
 ```clojure
-> (print (table [:lang :safety :strength]
-                [{:lang "Clojure" :strength "strong" :safety "safe"}
-                 {:lang "Java" :strength "strong" :safety "safe"}
-                 {:lang "JavaScript" :strength "weak"}]))
+> (println (table [:lang :safety :strength]
+                  [{:lang "Clojure" :strength "strong" :safety "safe"}
+                   {:lang "Java" :strength "strong" :safety "safe"}
+                   {:lang "JavaScript" :strength "weak"}]))
 |------------+--------+----------|
 |    Lang    | Safety | Strength |
 |------------+--------+----------|
@@ -99,18 +112,19 @@ An optional first vector lets you reorder your columns.
 | Java       | safe   | strong   |
 | JavaScript |        | weak     |
 |------------+--------+----------|
+nil
 ```
 
 Or, you can substitute (per column) a map for a keyword, and change
 the way the data is displayed.
 
 ```clojure
-> (print (table [{:name :lang :title "Language" :align :center :width 12}
-                 {:name :safety :width 12 :align :left}
-                 {:name :strength :width 12 :align :left}]
-                 [{:lang "Clojure" :strength "strong" :safety "safe"}
-                  {:lang "Java" :strength "strong" :safety "safe"}
-                  {:lang "JavaScript" :strength "weak"}]))
+> (println (table [{:name :lang :title "Language" :align :center :width 12}
+                   {:name :safety :width 12 :align :left}
+                   {:name :strength :width 12 :align :left}]
+                  [{:lang "Clojure" :strength "strong" :safety "safe"}
+                   {:lang "Java" :strength "strong" :safety "safe"}
+                   {:lang "JavaScript" :strength "weak"}]))
 |--------------+--------------+--------------|
 |   Language   | Safety       | Strength     |
 |--------------+--------------+--------------|
@@ -118,16 +132,18 @@ the way the data is displayed.
 |     Java     | safe         | strong       |
 |  JavaScript  |              | weak         |
 |--------------+--------------+--------------|
+nil
 ```
 
 Which probably seems like a lot of syntax, but consider that in actual
 use it would probably look more like this, which isn't nearly as bad:
 
 ```clojure
-> (print (table [{:name :lang :title "Language" :align :center :width 12}
-                 {:name :safety :width 12 :align :left}
-                 {:name :strength :width 12 :align :left}]
-                 (select-languages-from-db)))
+> (println (table [{:name :lang :title "Language" :align :center :width 12}
+                   {:name :safety :width 12 :align :left}
+                   {:name :strength :width 12 :align :left}]
+                  (select-languages-from-db)))
+;; assuming select-languages-from-db is some useful function
 |--------------+--------------+--------------|
 |   Language   | Safety       | Strength     |
 |--------------+--------------+--------------|
@@ -135,6 +151,7 @@ use it would probably look more like this, which isn't nearly as bad:
 |     Java     | safe         | strong       |
 |  JavaScript  |              | weak         |
 |--------------+--------------+--------------|
+nil
 ```
 
 Each column can also take a format function to alter the way the cells
@@ -142,11 +159,14 @@ are displayed.  For example, there's an included bar function for
 creating text bar charts:
 
 ```clojure
-> (print (table {:format raw} [:a :b {:name :c :format bar}]
-                              [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
+> (use '[doric.core :only [bar]])
+nil
+> (println (table {:format raw} [:a :b {:name :c :format bar}]
+                                [{:a 1 :b 2 :c 3}{:a 4 :b 5 :c 6}]))
 A B    C  
 1 2 ###   
 4 5 ######
+nil
 ```
 
 Column level options include:
